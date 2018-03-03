@@ -1,16 +1,33 @@
 package com.example.filmcatalog.films.providers;
 
+import com.example.filmcatalog.IApplication;
 
-import com.example.filmcatalog.films.Films;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import io.reactivex.Observable;
-import retrofit2.http.GET;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
-public interface NetworkService {
+public class NetworkService {
 
-    @GET("/discover")
-    Observable<Films> getFilms();
+    @Inject
+    @Named("media")
+    String url;
 
-    @GET("/search/search-movies")
-    Observable<Films> getFilmsWithFilter();
+    private FilmsService service;
+
+    public NetworkService(IApplication application) {
+        application.getComponent().inject(this);
+        service = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build()
+                .create(FilmsService.class);
+    }
+
+    public FilmsService getApi() {
+        return service;
+    }
 }

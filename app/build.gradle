@@ -31,6 +31,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.1'
     implementation 'com.google.dagger:dagger:2.4'
     annotationProcessor "com.google.dagger:dagger-compiler:2.4"
+
     testImplementation 'org.robolectric:shadows-multidex:3.1'
     testImplementation 'com.squareup.okhttp3:mockwebserver:3.9.0'
     testImplementation 'junit:junit:4.12'
@@ -38,6 +39,9 @@ dependencies {
     testImplementation 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
     testImplementation 'org.mockito:mockito-android:2.12.0'
     testImplementation 'org.mockito:mockito-core:2.12.0'
+
+    testImplementation 'com.google.dagger:dagger:2.4'
+    testAnnotationProcessor 'com.google.dagger:dagger-compiler:2.4'
 
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'

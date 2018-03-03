@@ -1,0 +1,215 @@
+{
+   "page":1,
+   "total_results":11,
+   "total_pages":1,
+   "results":[
+      {
+         "vote_count":5182,
+         "id":78,
+         "video":false,
+         "vote_average":7.9,
+         "title":"Blade Runner",
+         "popularity":79.658637,
+         "poster_path":"\/p64TtbZGCElxQHpAMWmDHkWJlH2.jpg",
+         "original_language":"en",
+         "original_title":"Blade Runner",
+         "genre_ids":[
+            878,
+            18,
+            53
+         ],
+         "backdrop_path":"\/5hJ0XDCxE3qGfp1H3h7HQP9rLfU.jpg",
+         "adult":false,
+         "overview":"In the smog-choked dystopian Los Angeles of 2019, blade runner Rick Deckard is called out of retirement to terminate a quartet of replicants who have escaped to Earth seeking their creator for a way to extend their short life spans.",
+         "release_date":"1982-06-25"
+      },
+      {
+         "vote_count":3471,
+         "id":335984,
+         "video":false,
+         "vote_average":7.4,
+         "title":"Blade Runner 2049",
+         "popularity":92.036582,
+         "poster_path":"\/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg",
+         "original_language":"en",
+         "original_title":"Blade Runner 2049",
+         "genre_ids":[
+            9648,
+            878,
+            53
+         ],
+         "backdrop_path":"\/mVr0UiqyltcfqxbAUcLl9zWL8ah.jpg",
+         "adult":false,
+         "overview":"Thirty years after the events of the first film, a new blade runner, LAPD Officer K, unearths a long-buried secret that has the potential to plunge what's left of society into chaos. K's discovery leads him on a quest to find Rick Deckard, a former LAPD blade runner who has been missing for 30 years.",
+         "release_date":"2017-10-04"
+      },
+      {
+         "vote_count":74,
+         "id":475946,
+         "video":false,
+         "vote_average":7.3,
+         "title":"Blade Runner: Black Out 2022",
+         "popularity":8.98979,
+         "poster_path":"\/zzRjnUOVXyjp2WudgT7KxJLYh9D.jpg",
+         "original_language":"en",
+         "original_title":"ブレードランナー ブラックアウト 2022",
+         "genre_ids":[
+            28,
+            16,
+            878
+         ],
+         "backdrop_path":"\/3C05fY5KvxfmPLp1exBSX8c0Q0K.jpg",
+         "adult":false,
+         "overview":"This animated short revolves around the events causing an electrical systems failure on the west coast of the US. According to Blade Runner 2049’s official timeline, this failure leads to cities shutting down, financial and trade markets being thrown into chaos, and food supplies dwindling. There’s no proof as to what caused the blackouts, but Replicants — the bio-engineered robots featured in the original Blade Runner, are blamed.",
+         "release_date":"2017-09-26"
+      },
+      {
+         "vote_count":2,
+         "id":481811,
+         "video":false,
+         "vote_average":5,
+         "title":"Oscar Pistorius: Blade Runner Killer",
+         "popularity":3.648615,
+         "poster_path":"\/fNyj0GDNGiXECd3hf5B5p6s1mC1.jpg",
+         "original_language":"en",
+         "original_title":"Oscar Pistorius: Blade Runner Killer",
+         "genre_ids":[
+            18
+         ],
+         "backdrop_path":"\/bf3siWQ1x5isebdLJxhAHZKa3gI.jpg",
+         "adult":false,
+         "overview":"\"Oscar Pistorius: Blade Runner Killer\" tells the story of the sprint runner dubbed the “Blade Runner,” and his rise to fame as a gold medalist Paralympic champion and as the first double-leg amputee to participate in the Olympics. Oscar’s (Andreas Damm, \"Elementary\") resilience to overcome his disability combined with his apparent fairy tale relationship with model Reeva Steenkap (Toni Garrn, \"Under the Bed\") turned him into a media favorite. This all shattered one Valentine's Day night when four bullets were fired and Reeva's life was taken. Her brutal death shocked the world and the court room drama that followed consumed the news. \"Oscar Pistorius: Blade Runner Killer\" provides an inside look at the events leading up to Reeva's killing, the cracks that formed in the relationship between Oscar and Reeva, as well as the courtroom drama that followed, revealing what happened on that tragic night.",
+         "release_date":"2017-11-11"
+      },
+      {
+         "vote_count":17,
+         "id":57656,
+         "video":false,
+         "vote_average":8.2,
+         "title":"Dangerous Days: Making Blade Runner",
+         "popularity":2.103582,
+         "poster_path":"\/g8Jku4Xokk3mpEKOvLTplXymYRt.jpg",
+         "original_language":"en",
+         "original_title":"Dangerous Days: Making Blade Runner",
+         "genre_ids":[
+            99
+         ],
+         "backdrop_path":"\/fDmsRQcrABWcLih6QSGsiEh4GJp.jpg",
+         "adult":false,
+         "overview":"The definitive three-and-a-half hour documentary about the troubled creation and enduring legacy of the science fiction classic \"Blade Runner,\" culled from 80 interviews and hours of never-before-seen outtakes and lost footage.",
+         "release_date":"2007-12-18"
+      },
+      {
+         "vote_count":64,
+         "id":475759,
+         "video":false,
+         "vote_average":6.6,
+         "title":"2048: Nowhere to Run",
+         "popularity":9.140741,
+         "poster_path":"\/5FTBLf0fnBbOmKrIuXLCrdxEUqT.jpg",
+         "original_language":"en",
+         "original_title":"2048: Nowhere to Run",
+         "genre_ids":[
+            878,
+            53
+         ],
+         "backdrop_path":"\/iiUizZMPhzGFo743aH0mz1GTLdx.jpg",
+         "adult":false,
+         "overview":"“2048: Nowhere to Run” takes place one year before the events of Blade Runner 2049. The short film focuses on Sapper, a man who is trying to make it through life day-by-day without turning back to his old ways. We’re introduced to both the gentle nature of Sapper and the violence he’s capable of when set off.",
+         "release_date":"2017-09-14"
+      },
+      {
+         "vote_count":71,
+         "id":473072,
+         "video":false,
+         "vote_average":7.1,
+         "title":"2036: Nexus Dawn",
+         "popularity":8.60905,
+         "poster_path":"\/uLlJdlYPa63GCi01tx98cxJT57u.jpg",
+         "original_language":"en",
+         "original_title":"2036: Nexus Dawn",
+         "genre_ids":[
+            878,
+            53
+         ],
+         "backdrop_path":"\/pMYSFleKKpLGhIbTiqd3o5r96jo.jpg",
+         "adult":false,
+         "overview":"This in-world short film takes place in the year 2036 and revolves around Jared Leto’s character, Niander Wallace. In this short, directed by Luke Scott, Wallace introduces a new line of “perfected” replicants called the Nexus 9, seeking to get the prohibition on replicants repealed. This no doubt has serious ramifications that will be crucial to the plot of Blade Runner 2049.",
+         "release_date":"2017-08-29"
+      },
+      {
+         "vote_count":0,
+         "id":505571,
+         "video":false,
+         "vote_average":0,
+         "title":"Blade Runner: Director's Cut",
+         "popularity":1.522291,
+         "poster_path":null,
+         "original_language":"en",
+         "original_title":"Blade Runner: Director's Cut",
+         "genre_ids":[
+
+         ],
+         "backdrop_path":null,
+         "adult":false,
+         "overview":"In the smog-choked dystopian Los Angeles of 2019, blade runner Rick Deckard is called out of retirement to terminate a quartet of replicants who have escaped to Earth seeking their creator for a way to extend their short life spans.",
+         "release_date":"1992-09-11"
+      },
+      {
+         "vote_count":1,
+         "id":85214,
+         "video":false,
+         "vote_average":10,
+         "title":"On the Edge of 'Blade Runner'",
+         "popularity":1.463023,
+         "poster_path":"\/10w86Rb70EckCNNdaVT5tpbh8L3.jpg",
+         "original_language":"en",
+         "original_title":"On the Edge of 'Blade Runner'",
+         "genre_ids":[
+            99
+         ],
+         "backdrop_path":null,
+         "adult":false,
+         "overview":"This is the rare UK Channel 4 documentary about Blade Runner, giving insights into it's history with interviews of Ridley Scott, the writers and nearly all the cast.  Interviews with production staff, including Ridley, give details into the creative process and turmoil during preproduction. Stories from Paul M. Sammon and Fancher provide insight into Philip K. Dick and the origins of Do Androids Dream of Electric Sheep?  Interweaved are cast interviews with the notable exceptions of Harrison Ford and Sean Young. Through these interviews we get a sense of how difficult and frustrating the film was to make as a result of an exacting director without allies and hot, wet, smoggy conditions; which added to the high pressure atmosphere everyone increasingly felt as the film went over budget.  There is also a tour of some locations, most notably the Bradbury Building and the Warner Brothers backlot that was the LA 2019 streets, which look very different from Ridley's dark version.",
+         "release_date":"2000-01-01"
+      },
+      {
+         "vote_count":7,
+         "id":118332,
+         "video":false,
+         "vote_average":1.4,
+         "title":"Earthkiller",
+         "popularity":1.379853,
+         "poster_path":"\/pIV7TZfbw5dNzu4grteARPi5Hrk.jpg",
+         "original_language":"en",
+         "original_title":"Earthkiller",
+         "genre_ids":[
+            27,
+            878,
+            53
+         ],
+         "backdrop_path":"\/xM08xOZeM45wX1uCXKILP468IVb.jpg",
+         "adult":false,
+         "overview":"Trapped on a space station orbiting Earth, a small army of human survivors battle the Undead in order to prevent the destruction of the Earth.",
+         "release_date":"2011-12-30"
+      },
+      {
+         "vote_count":2,
+         "id":442447,
+         "video":false,
+         "vote_average":6,
+         "title":"Tears in the Rain",
+         "popularity":1.164876,
+         "poster_path":"\/mjMmXV0cyAoJCDRyXKyJJxL9W6e.jpg",
+         "original_language":"en",
+         "original_title":"Tears in the Rain",
+         "genre_ids":[
+            878
+         ],
+         "backdrop_path":"\/6qGRCBGeyKIAEQdvyois1eYw2wK.jpg",
+         "adult":false,
+         "overview":"In a dystopian Los Angeles future, retirement engineer John Kampff hunts down suspected Replicant Andy Smith. As John soon learns, Replicant detection is nearly impossible without specialist equipment.",
+         "release_date":"2017-01-31"
+      }
+   ]
+}
