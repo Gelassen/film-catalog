@@ -11,6 +11,8 @@ import com.example.filmcatalog.di.NetworkModule;
 
 public class App extends Application implements IApplication {
 
+    public static final String TAG = "TAG";
+
     private static IApplication application;
 
     private Component component;

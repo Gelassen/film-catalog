@@ -2,6 +2,7 @@ package com.example.filmcatalog.di;
 
 import com.example.filmcatalog.Config;
 import com.example.filmcatalog.IApplication;
+import com.example.filmcatalog.films.providers.FilmsProvider;
 import com.example.filmcatalog.films.providers.NetworkService;
 
 import javax.inject.Named;
@@ -38,6 +39,11 @@ public class MockNetworkModule {
     @Named("ui")
     Scheduler providesObserveScheduler() {
         return Schedulers.trampoline();
+    }
+
+    @Provides
+    FilmsProvider providesFilmsProvider() {
+        return new FilmsProvider(application);
     }
 
     @Provides

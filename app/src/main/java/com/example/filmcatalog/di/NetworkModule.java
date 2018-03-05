@@ -1,6 +1,7 @@
 package com.example.filmcatalog.di;
 
 import com.example.filmcatalog.IApplication;
+import com.example.filmcatalog.films.providers.FilmsProvider;
 import com.example.filmcatalog.films.providers.NetworkService;
 
 import javax.inject.Named;
@@ -25,7 +26,7 @@ public class NetworkModule {
     @Provides
     @Named("media")
     String providesMediaUrl() {
-        return "https://developers.themoviedb.org/3/";
+        return "https://api.themoviedb.org/3/";
     }
 
     @Provides
@@ -38,6 +39,11 @@ public class NetworkModule {
     @Named("ui")
     Scheduler providesObserveScheduler() {
         return AndroidSchedulers.mainThread();
+    }
+
+    @Provides
+    FilmsProvider providesFilmsProvider() {
+        return new FilmsProvider(application);
     }
 
     @Provides

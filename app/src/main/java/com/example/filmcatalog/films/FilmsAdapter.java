@@ -27,7 +27,7 @@ public class FilmsAdapter extends Adapter<FilmsAdapter.FilmsViewHolder> {
     @NonNull
     @Override
     public FilmsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_movie_item, parent);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_movie_item, parent, false);
         return new FilmsViewHolder(view);
     }
 

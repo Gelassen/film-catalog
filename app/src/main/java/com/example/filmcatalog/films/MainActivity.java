@@ -6,12 +6,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import com.example.filmcatalog.App;
 import com.example.filmcatalog.BaseActivity;
+import com.example.filmcatalog.Debug;
 import com.example.filmcatalog.IApplication;
 import com.example.filmcatalog.R;
 import com.example.filmcatalog.films.Films.View;
 
 public class MainActivity extends BaseActivity<FilmsPresenter> implements View, SwipeRefreshLayout.OnRefreshListener {
+
+    private String apiKey = "6ccd72a2a8fc239b13f209408fc31c33";
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rv;
@@ -30,6 +34,11 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         rv.setAdapter(adapter);
 
         presenter.onAttachView(this);
+
+        presenter.onPullToRefresh(apiKey);
+
+//        Debug debug = new Debug((IApplication) getApplication());
+//        debug.runFilmsProvider();
     }
 
     @Override

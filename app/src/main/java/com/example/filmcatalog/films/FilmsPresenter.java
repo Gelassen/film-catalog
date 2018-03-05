@@ -1,11 +1,14 @@
 package com.example.filmcatalog.films;
 
 
+import android.util.Log;
+
+import com.example.filmcatalog.App;
 import com.example.filmcatalog.BasePresenter;
 import com.example.filmcatalog.Main;
 import com.example.filmcatalog.SimpleObserver;
 import com.example.filmcatalog.di.IComponent;
-import com.example.filmcatalog.films.providers.NetworkService;
+import com.example.filmcatalog.films.providers.FilmsProvider;
 
 import javax.inject.Inject;
 
@@ -16,7 +19,7 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
     private Films.View view;
 
     @Inject
-    NetworkService networkService;
+    FilmsProvider filmsProvider;
 
     public FilmsPresenter(IComponent application) {
         application.inject(this);
@@ -48,7 +51,7 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
     @Override
     public void onPullToRefresh(String apiKey) {
         // TODO properly track subscriptions and unsubscriptions
-        networkService.getApi()
+        filmsProvider
                 .getFilms(apiKey)
                 .subscribe(getFilmsObserver());
     }
@@ -64,6 +67,7 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
+                Log.e(App.TAG, "Failed to obtain list of data", e);
                 view.onError();
             }
         };

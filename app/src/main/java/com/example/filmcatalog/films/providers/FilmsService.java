@@ -9,9 +9,9 @@ import retrofit2.http.Query;
 
 public interface FilmsService {
 
-    @GET("/discover/movie")
-    Observable<Films> getFilms(@Query("api-key") String apiKey);
+    @GET("/3/discover/movie")
+    Observable<Films> getFilms(@Query("api_key") String apiKey);
 
-    @GET("/search/movie")
-    Observable<Films> getFilmsWithFilter(@Query("api-key") String apiKey, @Query("query") String query);
+    @GET("/3/search/movie")
+    Observable<Films> getFilmsWithFilter(@Query("api_key") String apiKey, @Query("query") String query);
 }
