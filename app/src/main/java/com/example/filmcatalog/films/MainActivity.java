@@ -13,6 +13,12 @@ import com.example.filmcatalog.IApplication;
 import com.example.filmcatalog.R;
 import com.example.filmcatalog.films.Films.View;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 public class MainActivity extends BaseActivity<FilmsPresenter> implements View, SwipeRefreshLayout.OnRefreshListener {
 
     private String apiKey = "6ccd72a2a8fc239b13f209408fc31c33";
@@ -26,7 +32,9 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        adapter = new FilmsAdapter();
+        JodaTimeAndroid.init(this);
+
+        adapter = new FilmsAdapter(this);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
         rv = findViewById(R.id.recyclerView);

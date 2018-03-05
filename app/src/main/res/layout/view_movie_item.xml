@@ -1,12 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="183dp"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/ic_launcher_background"
+        />
+
+    <RelativeLayout
+        android:layout_toRightOf="@+id/icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Привет мир!"/>
+        android:layout_margin="12dp"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:textSize="22sp"
+            android:lineSpacingExtra="6dp"
+            android:textStyle="bold"
+            android:textColor="#dd000000"
+            android:fontFamily="sans-serif-medium"
+            tools:text="Бегущий по лезвию 2048"
+            />
+
+        <TextView
+            android:id="@+id/desc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/title"
+            android:layout_above="@+id/date"
+            android:maxLines="3"
+            android:paddingBottom="19dp"
+            android:textSize="14sp"
+            android:textColor="#8a000000"
+            android:fontFamily="sans-serif"
+            tools:text="Отставной детектив Рик Декард вновь восстановлен в полиции Лос-Анджелеса для поиска возглавляемой Роем Батти группы киборгов, совершившей побег из космической колонии на Землю."
+            />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textColor="#8a000000"
+            android:textSize="14sp"
+            android:text="5th of March" />
+
+        <ImageView
+            android:id="@+id/fav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_fav_level_list" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
