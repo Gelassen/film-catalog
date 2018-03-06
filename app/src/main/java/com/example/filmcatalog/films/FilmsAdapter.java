@@ -53,12 +53,13 @@ public class FilmsAdapter extends Adapter<FilmsAdapter.FilmsViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull FilmsViewHolder holder, int position) {
-        Result item = dataSource.get(position);
+        final Result item = dataSource.get(position);
         holder.title.setText(item.getTitle());
         holder.desc.setText(item.getOverview());
         Glide.with(context)
                 .load(context.getString(R.string.base_url) + item.getPosterPath())
                 .into(holder.avatar);
+
         // TODO add placeholder
         holder.date.setText(getFormmattedData(item.getReleaseDate()));
 
@@ -71,7 +72,7 @@ public class FilmsAdapter extends Adapter<FilmsAdapter.FilmsViewHolder> {
 
     private String getFormmattedData(String date) {
         DateTimeFormatter dateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
-        DateTime dateTime = dateTimeFormat.parseDateTime("2016-02-11");
+        DateTime dateTime = dateTimeFormat.parseDateTime(date);
 
         DateTimeFormatter dateTimeFormatSecond = DateTimeFormat.forPattern("dd MMMM yyyy");
         return dateTimeFormatSecond.print(dateTime);

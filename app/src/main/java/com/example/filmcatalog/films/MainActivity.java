@@ -1,9 +1,12 @@
 package com.example.filmcatalog.films;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Config;
 import android.util.Log;
 
 import com.example.filmcatalog.App;
@@ -40,6 +43,7 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         rv = findViewById(R.id.recyclerView);
         rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rv.setAdapter(adapter);
+        rv.addItemDecoration(new ItemDecoration(8));
 
         presenter.onAttachView(this);
 
@@ -52,6 +56,16 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     @Override
     public void onRefresh() {
         presenter.onPullToRefresh(getString(R.string.api_key));
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            rv.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+        } else {
+            rv.setLayoutManager(new GridLayoutManager(getApplicationContext(), 1));
+        }
     }
 
     @Override
