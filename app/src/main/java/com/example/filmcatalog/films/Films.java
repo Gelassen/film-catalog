@@ -10,6 +10,8 @@ public interface Films {
         void onResult(com.example.filmcatalog.films.model.Films films);
 
         void onError();
+
+        void onFilmsItemClick(String name);
     }
 
     interface Presenter extends Main.Presenter {

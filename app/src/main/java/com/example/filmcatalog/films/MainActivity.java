@@ -2,6 +2,7 @@ package com.example.filmcatalog.films;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,7 +47,7 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         gridLayoutManager = new GridLayoutManager(getApplicationContext(), spanCount);
         gridLayoutManager.setSpanCount(getSpanCount(null));
 
-        adapter = new FilmsAdapter(this);
+        adapter = new FilmsAdapter(this, this);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
         rv = findViewById(R.id.recyclerView);
@@ -106,6 +107,11 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     public void onError() {
         // TODO show error state
         Log.d("TAG", "On error");
+    }
+
+    @Override
+    public void onFilmsItemClick(String name) {
+        Snackbar.make(findViewById(R.id.coordinatorLayout), name, Snackbar.LENGTH_SHORT).show();
     }
 
     private int getSpanCount(Configuration newConfig) {

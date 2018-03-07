@@ -5,7 +5,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.filmcatalog.App;
 import com.example.filmcatalog.R;
 import com.example.filmcatalog.films.model.Result;
 
@@ -27,6 +25,7 @@ import java.util.List;
 public class FilmsAdapter extends Adapter<FilmsAdapter.FilmsViewHolder> {
 
     private Context context;
+    private Films.View view;
     private List<Result> dataSource = new ArrayList<>();
 
     public void update(List<Result> results) {
@@ -35,8 +34,9 @@ public class FilmsAdapter extends Adapter<FilmsAdapter.FilmsViewHolder> {
         notifyDataSetChanged();
     }
 
-    public FilmsAdapter(Context context) {
+    public FilmsAdapter(Context context, Films.View view) {
         this.context = context;
+        this.view = view;
     }
 
     @NonNull
@@ -54,9 +54,14 @@ public class FilmsAdapter extends Adapter<FilmsAdapter.FilmsViewHolder> {
         Glide.with(context)
                 .load(context.getString(R.string.base_url) + item.getPosterPath())
                 .into(holder.avatar);
-
-        // TODO add placeholder
         holder.date.setText(getFormattedData(item.getReleaseDate()));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (view == null) return;
+                view.onFilmsItemClick(item.getTitle());
+            }
+        });
     }
 
     @Override
