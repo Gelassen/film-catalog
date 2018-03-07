@@ -8,11 +8,16 @@ import com.example.filmcatalog.BasePresenter;
 import com.example.filmcatalog.Main;
 import com.example.filmcatalog.SimpleObserver;
 import com.example.filmcatalog.di.IComponent;
+import com.example.filmcatalog.films.model.Result;
 import com.example.filmcatalog.films.providers.FilmsProvider;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 public class FilmsPresenter extends BasePresenter implements Films.Presenter {
 
@@ -39,13 +44,20 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
     }
 
     @Override
-    public void onViewCreated() {
-
-    }
-
-    @Override
     public void onSearchMovie(String apiKey, String movie) {
-
+        // TODO properly track subscriptions and unsubscriptions
+        filmsProvider
+                .getFilmsWithFilter(apiKey, movie)
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        view.showProgressPlaceholder();
+                        com.example.filmcatalog.films.model.Films films = new com.example.filmcatalog.films.model.Films();
+                        films.setResults(new ArrayList<Result>());
+                        view.onResult(films);
+                    }
+                })
+                .subscribe(getFilterFilmsObserver(movie));
     }
 
     @Override
@@ -53,6 +65,12 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
         // TODO properly track subscriptions and unsubscriptions
         filmsProvider
                 .getFilms(apiKey)
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        view.showProgressPlaceholder();
+                    }
+                })
                 .subscribe(getFilmsObserver());
     }
 
@@ -62,14 +80,47 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
             public void onNext(com.example.filmcatalog.films.model.Films films) {
                 super.onNext(films);
                 view.onResult(films);
+                resetState();
             }
 
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
                 Log.e(App.TAG, "Failed to obtain list of data", e);
-                view.onError();
+                view.hideProgressPlaceholder();
+                view.showError();
             }
         };
+    }
+
+    private Observer<com.example.filmcatalog.films.model.Films> getFilterFilmsObserver(final String query) {
+        return new SimpleObserver<com.example.filmcatalog.films.model.Films>() {
+            @Override
+            public void onNext(com.example.filmcatalog.films.model.Films films) {
+                super.onNext(films);
+                boolean isNotFound = films.getResults().size() == 0;
+                if (isNotFound) {
+                    view.onResult(films);
+                    view.showFilmsNotFound(query);
+                } else {
+                    view.onResult(films);
+                }
+                view.hideProgressPlaceholder();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                Log.e(App.TAG, "Failed to obtain list of data", e);
+                view.hideProgressPlaceholder();
+                view.showError();
+            }
+        };
+    }
+
+    private void resetState() {
+        view.hidesError();
+        view.hidesFilmsNotFound();
+        view.hideProgressPlaceholder();
     }
 }
