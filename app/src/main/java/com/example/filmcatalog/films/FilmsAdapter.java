@@ -21,12 +21,8 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.http.Url;
 
 public class FilmsAdapter extends Adapter<FilmsAdapter.FilmsViewHolder> {
 
@@ -46,7 +42,6 @@ public class FilmsAdapter extends Adapter<FilmsAdapter.FilmsViewHolder> {
     @NonNull
     @Override
     public FilmsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        GlideApp.with(this);//.load("http://goo.gl/gEgYUd").into(imageView);
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_movie_item, parent, false);
         return new FilmsViewHolder(view);
     }
@@ -61,8 +56,7 @@ public class FilmsAdapter extends Adapter<FilmsAdapter.FilmsViewHolder> {
                 .into(holder.avatar);
 
         // TODO add placeholder
-        holder.date.setText(getFormmattedData(item.getReleaseDate()));
-
+        holder.date.setText(getFormattedData(item.getReleaseDate()));
     }
 
     @Override
@@ -70,7 +64,7 @@ public class FilmsAdapter extends Adapter<FilmsAdapter.FilmsViewHolder> {
         return dataSource.size();
     }
 
-    private String getFormmattedData(String date) {
+    private String getFormattedData(String date) {
         DateTimeFormatter dateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
         DateTime dateTime = dateTimeFormat.parseDateTime(date);
 

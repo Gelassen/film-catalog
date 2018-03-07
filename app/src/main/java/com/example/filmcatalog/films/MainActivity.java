@@ -24,8 +24,14 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class MainActivity extends BaseActivity<FilmsPresenter> implements View, SwipeRefreshLayout.OnRefreshListener {
 
+    private static final int SINGLE_IN_ROW = 1;
+    private static final int DOUBLE_IN_ROW = 2;
+
+    private final int spanCount = SINGLE_IN_ROW;
+
     private String apiKey = "6ccd72a2a8fc239b13f209408fc31c33";
 
+    private GridLayoutManager gridLayoutManager;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rv;
     private FilmsAdapter adapter;
@@ -37,11 +43,14 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
 
         JodaTimeAndroid.init(this);
 
+        gridLayoutManager = new GridLayoutManager(getApplicationContext(), spanCount);
+        gridLayoutManager.setSpanCount(getSpanCount(null));
+
         adapter = new FilmsAdapter(this);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
         rv = findViewById(R.id.recyclerView);
-        rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        rv.setLayoutManager(gridLayoutManager);
         rv.setAdapter(adapter);
         rv.addItemDecoration(new ItemDecoration(8));
 
@@ -61,11 +70,12 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            rv.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-        } else {
-            rv.setLayoutManager(new GridLayoutManager(getApplicationContext(), 1));
-        }
+        gridLayoutManager.setSpanCount(getSpanCount(newConfig));
+        rv.setLayoutManager(gridLayoutManager);
+        rv.setAdapter(null);
+        rv.setAdapter(adapter);
+        rv.getRecycledViewPool().clear();
+        rv.getRecycledViewPool().getRecycledView(0);
     }
 
     @Override
@@ -96,5 +106,15 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     public void onError() {
         // TODO show error state
         Log.d("TAG", "On error");
+    }
+
+    private int getSpanCount(Configuration newConfig) {
+        int spanCount;
+        if (newConfig == null) {
+            spanCount = (Configuration.ORIENTATION_PORTRAIT == getResources().getConfiguration().orientation) ? SINGLE_IN_ROW : DOUBLE_IN_ROW;
+        } else {
+            spanCount = (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) ? DOUBLE_IN_ROW : SINGLE_IN_ROW;
+        }
+        return spanCount;
     }
 }
