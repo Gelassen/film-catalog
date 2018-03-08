@@ -11,6 +11,7 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.filmcatalog.BaseActivity;
@@ -26,8 +27,6 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     private static final int DOUBLE_IN_ROW = 2;
 
     private final int spanCount = SINGLE_IN_ROW;
-
-    private String apiKey = "6ccd72a2a8fc239b13f209408fc31c33";
 
     private GridLayoutManager gridLayoutManager;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -55,7 +54,7 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         search.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View view) {
-                presenter.onSearchMovie(apiKey, filter.getText().toString());
+                presenter.onSearchMovie(getString(R.string.api_key), filter.getText().toString());
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
@@ -66,6 +65,17 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
             public void onClick(android.view.View view) {
                 filter.getText().clear();
                 clear.setVisibility(android.view.View.GONE);
+            }
+        });
+
+        ImageView update = findViewById(R.id.update);
+        update.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View view) {
+                presenter.onSearchMovie(
+                        getString(R.string.api_key),
+                        filter.getText().toString()
+                );
             }
         });
 
@@ -86,13 +96,13 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         failedRequestView.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View view) {
-                presenter.onPullToRefresh(apiKey);
+                presenter.onPullToRefresh(getString(R.string.api_key));
             }
         });
 
         presenter.onAttachView(this);
 
-        presenter.onPullToRefresh(apiKey);
+        presenter.onPullToRefresh(getString(R.string.api_key));
     }
 
     @Override
@@ -128,8 +138,14 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     }
 
     @Override
-    public void onResult(com.example.filmcatalog.films.model.Films films) {
-        adapter.update(films.getResults());
+    public void onResult(com.example.filmcatalog.films.model.Films films, boolean lastPage) {
+        adapter.update(films.getResults(), !lastPage);
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onNextPage() {
+        presenter.onPullToRefresh(getString(R.string.api_key));
     }
 
     @Override
@@ -182,7 +198,8 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         return new InputFilter[] { new InputFilter() {
             @Override
             public CharSequence filter(CharSequence charSequence, int i, int i1, Spanned spanned, int i2, int i3) {
-                boolean isSomethingInInput = charSequence.length() != 0;
+                EditText filter = findViewById(R.id.filter);
+                boolean isSomethingInInput = filter.getText().toString().length() != 0;
                 clear.setVisibility(isSomethingInInput ? android.view.View.VISIBLE : android.view.View.GONE);
                 return charSequence;
             }

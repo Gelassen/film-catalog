@@ -24,7 +24,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:design:27.1.0'
     implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'com.android.support:recyclerview-v7:+'
 
     implementation 'net.danlew:android.joda:2.9.9.2'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'

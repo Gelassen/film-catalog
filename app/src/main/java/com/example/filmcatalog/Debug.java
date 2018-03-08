@@ -37,7 +37,7 @@ public class Debug {
     }
 
     public void runFilmsProvider() {
-        provider.getFilms(apiKey)
+        provider.getFilms(apiKey, "ru-RU", "1")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(getSubscriber());

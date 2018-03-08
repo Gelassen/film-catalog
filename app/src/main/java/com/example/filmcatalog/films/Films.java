@@ -6,7 +6,9 @@ import com.example.filmcatalog.Main;
 public interface Films {
 
     interface View extends Main.View {
-        void onResult(com.example.filmcatalog.films.model.Films films);
+        void onResult(com.example.filmcatalog.films.model.Films films, boolean lastPage);
+
+        void onNextPage();
 
         void onFilmsItemClick(String name);
 

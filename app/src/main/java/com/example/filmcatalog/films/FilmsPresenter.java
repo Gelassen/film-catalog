@@ -21,10 +21,16 @@ import io.reactivex.functions.Consumer;
 
 public class FilmsPresenter extends BasePresenter implements Films.Presenter {
 
+    private static final int AMOUNT_IN_REQUEST = 20;
+
     private Films.View view;
 
     @Inject
     FilmsProvider filmsProvider;
+
+    private String defaultLang = "ru-RU";
+    private int page = 1;
+    private int searchPage = 1;
 
     public FilmsPresenter(IComponent application) {
         application.inject(this);
@@ -46,15 +52,20 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
     @Override
     public void onSearchMovie(String apiKey, String movie) {
         // TODO properly track subscriptions and unsubscriptions
+        onSearchMovieNextPage(apiKey, movie, page);
+    }
+
+    private void onSearchMovieNextPage(String apiKey, String movie, int page) {
         filmsProvider
-                .getFilmsWithFilter(apiKey, movie)
+                .getFilmsWithFilter(apiKey, defaultLang, String.valueOf(page), movie)
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
                         view.showProgressPlaceholder();
-                        com.example.filmcatalog.films.model.Films films = new com.example.filmcatalog.films.model.Films();
-                        films.setResults(new ArrayList<Result>());
-                        view.onResult(films);
+                        searchPage++;
+//                        com.example.filmcatalog.films.model.Films films = new com.example.filmcatalog.films.model.Films();
+//                        films.setResults(new ArrayList<Result>());
+//                        view.onResult(films);
                     }
                 })
                 .subscribe(getFilterFilmsObserver(movie));
@@ -64,11 +75,12 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
     public void onPullToRefresh(String apiKey) {
         // TODO properly track subscriptions and unsubscriptions
         filmsProvider
-                .getFilms(apiKey)
+                .getFilms(apiKey, defaultLang, String.valueOf(page))
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
                         view.showProgressPlaceholder();
+                        page++;
                     }
                 })
                 .subscribe(getFilmsObserver());
@@ -79,7 +91,7 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
             @Override
             public void onNext(com.example.filmcatalog.films.model.Films films) {
                 super.onNext(films);
-                view.onResult(films);
+                view.onResult(films, films.getResults().size() < AMOUNT_IN_REQUEST);
                 resetState();
             }
 
@@ -100,10 +112,10 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
                 super.onNext(films);
                 boolean isNotFound = films.getResults().size() == 0;
                 if (isNotFound) {
-                    view.onResult(films);
+                    view.onResult(films, true);
                     view.showFilmsNotFound(query);
                 } else {
-                    view.onResult(films);
+                    view.onResult(films, films.getResults().size() < AMOUNT_IN_REQUEST);
                 }
                 view.hideProgressPlaceholder();
             }

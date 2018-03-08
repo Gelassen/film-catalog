@@ -5,13 +5,16 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.filmcatalog.App;
 import com.example.filmcatalog.R;
 import com.example.filmcatalog.films.model.Result;
 
@@ -22,33 +25,89 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilmsAdapter extends Adapter<FilmsAdapter.FilmsViewHolder> {
+public class FilmsAdapter extends Adapter<RecyclerView.ViewHolder> {
+
+    private static final int VIEW_TYPE_ITEM = 0;
+    private static final int VIEW_TYPE_FOOTER = 1;
+    private static final int FOOTER = 1;
 
     private Context context;
     private Films.View view;
+    private boolean isUpdateInProgress;
+    private boolean isShowFooter;
     private List<Result> dataSource = new ArrayList<>();
 
     public void update(List<Result> results) {
-        dataSource.clear();
+        update(results, true);
+    }
+
+    public void update(List<Result> results, boolean showFooter) {
         dataSource.addAll(results);
+        isUpdateInProgress = false;
+        isShowFooter = showFooter;
         notifyDataSetChanged();
     }
 
     public FilmsAdapter(Context context, Films.View view) {
         this.context = context;
         this.view = view;
+        isShowFooter = true;
+        isUpdateInProgress = false;
     }
 
     @NonNull
     @Override
-    public FilmsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_movie_item, parent, false);
-        return new FilmsViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view;
+        switch (viewType) {
+            case VIEW_TYPE_FOOTER:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_footer, parent, false);
+                return new FooterViewHolder(view);
+            default:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_movie_item, parent, false);
+                return new FilmsViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FilmsViewHolder holder, int position) {
-        final Result item = dataSource.get(position);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof FilmsViewHolder) {
+            final Result item = dataSource.get(position);
+            bindFilmsViewHolder((FilmsViewHolder) holder, item);
+        } else if (holder instanceof FooterViewHolder) {
+            bindFooterViewHolder((FooterViewHolder) holder);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return isShowFooter ? dataSource.size() + FOOTER : dataSource.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        Log.d(App.TAG, "getItemViewType: " + position + " isShowFooter: " + isShowFooter);
+        return (isShowFooter && position == getFooterPosition()) ? VIEW_TYPE_FOOTER : VIEW_TYPE_ITEM;
+    }
+
+    public void showFooter(boolean showFooter) {
+        isShowFooter = showFooter;
+    }
+
+    private void bindFooterViewHolder(final FooterViewHolder holder) {
+        holder.next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FilmsAdapter.this.view.onNextPage();
+                holder.next.setVisibility(View.GONE);
+                holder.progress.setVisibility(View.VISIBLE);
+            }
+        });
+        holder.next.setVisibility(isUpdateInProgress ? View.GONE : View.VISIBLE);
+        holder.progress.setVisibility(isUpdateInProgress ? View.VISIBLE : View.GONE);
+    }
+
+    private void bindFilmsViewHolder(FilmsViewHolder holder, final Result item) {
         holder.title.setText(item.getTitle());
         holder.desc.setText(item.getOverview());
         Glide.with(context)
@@ -64,9 +123,8 @@ public class FilmsAdapter extends Adapter<FilmsAdapter.FilmsViewHolder> {
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return dataSource.size();
+    private int getFooterPosition() {
+        return getItemCount() - 1;
     }
 
     private String getFormattedData(String date) {
@@ -93,6 +151,18 @@ public class FilmsAdapter extends Adapter<FilmsAdapter.FilmsViewHolder> {
             desc = view.findViewById(R.id.desc);
             date = view.findViewById(R.id.date);
             fav = view.findViewById(R.id.fav);
+        }
+    }
+
+    public class FooterViewHolder extends RecyclerView.ViewHolder {
+
+        private final ImageView next;
+        private final ProgressBar progress;
+
+        public FooterViewHolder(View itemView) {
+            super(itemView);
+            next = itemView.findViewById(R.id.next);
+            progress = itemView.findViewById(R.id.progress);
         }
     }
 }

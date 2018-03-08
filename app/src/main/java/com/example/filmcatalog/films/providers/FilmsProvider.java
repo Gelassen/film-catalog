@@ -29,17 +29,17 @@ public class FilmsProvider implements FilmsService {
     }
 
     @Override
-    public Observable<Films> getFilms(String apiKey) {
+    public Observable<Films> getFilms(String apiKey, String language, String page) {
         return service.getApi()
-                .getFilms(apiKey)
+                .getFilms(apiKey, language, page)
                 .subscribeOn(subscribeScheduler)
                 .observeOn(observeScheduler);
     }
 
     @Override
-    public Observable<Films> getFilmsWithFilter(String apiKey, String query) {
+    public Observable<Films> getFilmsWithFilter(String apiKey, String language, String page, String query) {
         return service.getApi()
-                .getFilmsWithFilter(apiKey, query)
+                .getFilmsWithFilter(apiKey, language, page, query)
                 .subscribeOn(subscribeScheduler)
                 .observeOn(observeScheduler);
     }
