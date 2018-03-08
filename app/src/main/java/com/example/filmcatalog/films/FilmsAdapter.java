@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.filmcatalog.App;
+import com.example.filmcatalog.Favorites;
 import com.example.filmcatalog.R;
 import com.example.filmcatalog.films.model.Result;
 
@@ -36,15 +38,22 @@ public class FilmsAdapter extends Adapter<RecyclerView.ViewHolder> {
     private boolean isUpdateInProgress;
     private boolean isShowFooter;
     private List<Result> dataSource = new ArrayList<>();
+    private Favorites favorites;
 
     public void update(List<Result> results) {
         update(results, true);
     }
 
     public void update(List<Result> results, boolean showFooter) {
-        dataSource.addAll(results);
         isUpdateInProgress = false;
         isShowFooter = showFooter;
+        dataSource.addAll(results);
+        isShowFooter = dataSource.size() == 0 ? false : true;
+        notifyDataSetChanged();
+    }
+
+    public void clear() {
+        dataSource.clear();
         notifyDataSetChanged();
     }
 
@@ -53,6 +62,7 @@ public class FilmsAdapter extends Adapter<RecyclerView.ViewHolder> {
         this.view = view;
         isShowFooter = true;
         isUpdateInProgress = false;
+        favorites = Favorites.restore(context);
     }
 
     @NonNull
@@ -86,12 +96,15 @@ public class FilmsAdapter extends Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        Log.d(App.TAG, "getItemViewType: " + position + " isShowFooter: " + isShowFooter);
         return (isShowFooter && position == getFooterPosition()) ? VIEW_TYPE_FOOTER : VIEW_TYPE_ITEM;
     }
 
-    public void showFooter(boolean showFooter) {
-        isShowFooter = showFooter;
+    public void onDestroy() {
+        favorites.save(context);
+    }
+
+    public boolean isFooter(int position) {
+        return isShowFooter && position == getFooterPosition();
     }
 
     private void bindFooterViewHolder(final FooterViewHolder holder) {
@@ -107,13 +120,22 @@ public class FilmsAdapter extends Adapter<RecyclerView.ViewHolder> {
         holder.progress.setVisibility(isUpdateInProgress ? View.VISIBLE : View.GONE);
     }
 
-    private void bindFilmsViewHolder(FilmsViewHolder holder, final Result item) {
+    private void bindFilmsViewHolder(final FilmsViewHolder holder, final Result item) {
         holder.title.setText(item.getTitle());
         holder.desc.setText(item.getOverview());
         Glide.with(context)
                 .load(context.getString(R.string.base_url) + item.getPosterPath())
                 .into(holder.avatar);
         holder.date.setText(getFormattedData(item.getReleaseDate()));
+        holder.fav.getBackground().setLevel(favorites.isFav(item.getId()) ? 1 : 0);
+        holder.fav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isFav = favorites.isFav(item.getId());
+                favorites.setFavorities(item.getId(), !isFav);
+                holder.fav.getBackground().setLevel(favorites.isFav(item.getId()) ? 1 : 0);
+            }
+        });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,6 +150,8 @@ public class FilmsAdapter extends Adapter<RecyclerView.ViewHolder> {
     }
 
     private String getFormattedData(String date) {
+        if (TextUtils.isEmpty(date)) return "";
+
         DateTimeFormatter dateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
         DateTime dateTime = dateTimeFormat.parseDateTime(date);
 

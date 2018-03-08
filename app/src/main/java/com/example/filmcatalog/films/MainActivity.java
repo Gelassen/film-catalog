@@ -9,14 +9,17 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.filmcatalog.App;
 import com.example.filmcatalog.BaseActivity;
 import com.example.filmcatalog.IApplication;
 import com.example.filmcatalog.R;
+import com.example.filmcatalog.Storage;
 import com.example.filmcatalog.films.Films.View;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -33,7 +36,6 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     private RecyclerView rv;
     private FilmsAdapter adapter;
 
-    private android.view.View search;
     private android.view.View clear;
 
     private android.view.View notFoundView;
@@ -48,17 +50,8 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         JodaTimeAndroid.init(this);
 
         final EditText filter = findViewById(R.id.filter);
-        search = findViewById(R.id.search);
         clear = findViewById(R.id.clear);
 
-        search.setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View view) {
-                presenter.onSearchMovie(getString(R.string.api_key), filter.getText().toString());
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }
-        });
         filter.setFilters(getFilters());
         clear.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
@@ -74,13 +67,20 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
             public void onClick(android.view.View view) {
                 presenter.onSearchMovie(
                         getString(R.string.api_key),
-                        filter.getText().toString()
+                        filter.getText().toString(),
+                        false
                 );
             }
         });
 
         gridLayoutManager = new GridLayoutManager(getApplicationContext(), spanCount);
         gridLayoutManager.setSpanCount(getSpanCount(null));
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return adapter.isFooter(position) ? 1 : getSpanCount(null);
+            }
+        });
 
         adapter = new FilmsAdapter(this, this);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
@@ -111,9 +111,15 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(final Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         gridLayoutManager.setSpanCount(getSpanCount(newConfig));
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return adapter.isFooter(position) ? 1 : getSpanCount(newConfig);
+            }
+        });
         rv.setLayoutManager(gridLayoutManager);
         rv.setAdapter(null);
         rv.setAdapter(adapter);
@@ -125,6 +131,7 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     protected void onDestroy() {
         super.onDestroy();
         presenter.onDetachView();
+        adapter.onDestroy();
     }
 
     @Override
@@ -141,11 +148,26 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     public void onResult(com.example.filmcatalog.films.model.Films films, boolean lastPage) {
         adapter.update(films.getResults(), !lastPage);
         swipeRefreshLayout.setRefreshing(false);
+
+        Storage storage = new Storage();
+        storage.put(films.getResults());
+    }
+
+    @Override
+    public void onFilterResult(com.example.filmcatalog.films.model.Films films, boolean lastPage) {
+        adapter.clear();
+        adapter.update(films.getResults(), !lastPage);
+        swipeRefreshLayout.setRefreshing(false);
+        hideKeyboard();
     }
 
     @Override
     public void onNextPage() {
-        presenter.onPullToRefresh(getString(R.string.api_key));
+        if (isSearchMode()) {
+            presenter.onSearchMovie(getString(R.string.api_key), getSearchText(), false);
+        } else {
+            presenter.onPullToRefresh(getString(R.string.api_key));
+        }
     }
 
     @Override
@@ -185,6 +207,18 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         notFoundView.setVisibility(android.view.View.GONE);
     }
 
+    private String getSearchText() {
+        EditText filter = findViewById(R.id.filter);
+        String words = filter.getText().toString();
+        return words;
+    }
+
+    private boolean isSearchMode() {
+        EditText filter = findViewById(R.id.filter);
+        String words = filter.getText().toString();
+        return words.length() != 0;
+    }
+
     private int getSpanCount(Configuration newConfig) {
         int spanCount;
         if (newConfig == null) {
@@ -195,13 +229,20 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         return spanCount;
     }
 
-    public InputFilter[] getFilters() {
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(findViewById(R.id.coordinatorLayout).getWindowToken(), 0);
+    }
+
+    private InputFilter[] getFilters() {
         return new InputFilter[] { new InputFilter() {
             @Override
             public CharSequence filter(CharSequence charSequence, int i, int i1, Spanned spanned, int i2, int i3) {
                 EditText filter = findViewById(R.id.filter);
-                boolean isSomethingInInput = filter.getText().toString().length() != 0;
+                String words = filter.getText().toString();
+                boolean isSomethingInInput = words.length() != 0;
                 clear.setVisibility(isSomethingInInput ? android.view.View.VISIBLE : android.view.View.GONE);
+                presenter.onSearchMovie(MainActivity.this.getString(R.string.api_key), words, true);
                 return charSequence;
             }
         }};

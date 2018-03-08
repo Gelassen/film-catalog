@@ -8,10 +8,7 @@ import com.example.filmcatalog.BasePresenter;
 import com.example.filmcatalog.Main;
 import com.example.filmcatalog.SimpleObserver;
 import com.example.filmcatalog.di.IComponent;
-import com.example.filmcatalog.films.model.Result;
 import com.example.filmcatalog.films.providers.FilmsProvider;
-
-import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -50,9 +47,10 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
     }
 
     @Override
-    public void onSearchMovie(String apiKey, String movie) {
+    public void onSearchMovie(String apiKey, String movie, boolean isFirstPage) {
         // TODO properly track subscriptions and unsubscriptions
-        onSearchMovieNextPage(apiKey, movie, page);
+        if (isFirstPage) searchPage = 0;
+        onSearchMovieNextPage(apiKey, movie, searchPage);
     }
 
     private void onSearchMovieNextPage(String apiKey, String movie, int page) {
@@ -112,10 +110,10 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
                 super.onNext(films);
                 boolean isNotFound = films.getResults().size() == 0;
                 if (isNotFound) {
-                    view.onResult(films, true);
+                    view.onFilterResult(films, true);
                     view.showFilmsNotFound(query);
                 } else {
-                    view.onResult(films, films.getResults().size() < AMOUNT_IN_REQUEST);
+                    view.onFilterResult(films, films.getResults().size() < AMOUNT_IN_REQUEST);
                 }
                 view.hideProgressPlaceholder();
             }

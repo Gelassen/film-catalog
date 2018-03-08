@@ -8,6 +8,8 @@ public interface Films {
     interface View extends Main.View {
         void onResult(com.example.filmcatalog.films.model.Films films, boolean lastPage);
 
+        void onFilterResult(com.example.filmcatalog.films.model.Films films, boolean lastPage);
+
         void onNextPage();
 
         void onFilmsItemClick(String name);
@@ -26,7 +28,7 @@ public interface Films {
     }
 
     interface Presenter extends Main.Presenter {
-        void onSearchMovie(String apiKey, String movie);
+        void onSearchMovie(String apiKey, String movie, boolean isFirstPage);
 
         void onPullToRefresh(String apiKey);
     }
