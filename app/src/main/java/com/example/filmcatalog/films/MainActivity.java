@@ -177,6 +177,7 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     @Override
     public void showError() {
         failedRequestView.setVisibility(android.view.View.VISIBLE);
+        Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.network_error), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

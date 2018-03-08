@@ -3,5 +3,6 @@
     <string name="api">https://developers.themoviedb.org/3/</string>
     <string name="films_not_found">По вашему запросу "%1$s" ничего не найдено.</string>
     <string name="films_can_not_process">Не удалось обработать ваш запрос. Попробуйте ещё раз.</string>
+    <string name="network_error">Проверьте ваше соединение с интернетом и попробуёте ещё раз.</string>
     <string name="api_key">6ccd72a2a8fc239b13f209408fc31c33</string>
 </resources>
