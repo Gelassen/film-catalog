@@ -3,6 +3,7 @@ package com.example.filmcatalog.films;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -53,34 +54,19 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         clear = findViewById(R.id.clear);
 
         filter.setFilters(getFilters());
-        clear.setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View view) {
-                filter.getText().clear();
-                clear.setVisibility(android.view.View.GONE);
-            }
-        });
+        clear.setOnClickListener(getClearListener(filter));
 
         ImageView update = findViewById(R.id.update);
-        update.setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View view) {
-                presenter.onSearchMovie(
-                        getString(R.string.api_key),
-                        filter.getText().toString(),
-                        false
-                );
-            }
-        });
+        update.setOnClickListener(getSearchMovieListener(filter));
 
         gridLayoutManager = new GridLayoutManager(getApplicationContext(), spanCount);
         gridLayoutManager.setSpanCount(getSpanCount(null));
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                return adapter.isFooter(position) ? 1 : getSpanCount(null);
-            }
-        });
+//        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+//            @Override
+//            public int getSpanSize(int position) {
+//                return adapter.isFooter(position) ? 1 : getSpanCount(null);
+//            }
+//        });
 
         adapter = new FilmsAdapter(this, this);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
@@ -103,6 +89,15 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         presenter.onAttachView(this);
 
         presenter.onPullToRefresh(getString(R.string.api_key));
+
+        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                final int position = gridLayoutManager.findFirstVisibleItemPosition();
+                presenter.saveListState(position);
+            }
+        });
     }
 
     @Override
@@ -113,18 +108,16 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     @Override
     public void onConfigurationChanged(final Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+
         gridLayoutManager.setSpanCount(getSpanCount(newConfig));
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                return adapter.isFooter(position) ? 1 : getSpanCount(newConfig);
-            }
-        });
+
         rv.setLayoutManager(gridLayoutManager);
         rv.setAdapter(null);
         rv.setAdapter(adapter);
         rv.getRecycledViewPool().clear();
         rv.getRecycledViewPool().getRecycledView(0);
+
+        presenter.onConfigurationChange();
     }
 
     @Override
@@ -205,6 +198,36 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     @Override
     public void hidesError() {
         notFoundView.setVisibility(android.view.View.GONE);
+    }
+
+    @Override
+    public void onRestoreState(int position) {
+        rv.scrollToPosition(position);
+    }
+
+    @NonNull
+    private android.view.View.OnClickListener getSearchMovieListener(final EditText filter) {
+        return new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View view) {
+                presenter.onSearchMovie(
+                        getString(R.string.api_key),
+                        filter.getText().toString(),
+                        false
+                );
+            }
+        };
+    }
+
+    @NonNull
+    private android.view.View.OnClickListener getClearListener(final EditText filter) {
+        return new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View view) {
+                filter.getText().clear();
+                clear.setVisibility(android.view.View.GONE);
+            }
+        };
     }
 
     private String getSearchText() {

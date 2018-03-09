@@ -28,6 +28,7 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
     private String defaultLang = "ru-RU";
     private int page = 1;
     private int searchPage = 1;
+    private int position = 0;
 
     public FilmsPresenter(IComponent application) {
         application.inject(this);
@@ -82,6 +83,16 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
                     }
                 })
                 .subscribe(getFilmsObserver());
+    }
+
+    @Override
+    public void onConfigurationChange() {
+        view.onRestoreState(position);
+    }
+
+    @Override
+    public void saveListState(int position) {
+        this.position = position;
     }
 
     private Observer<com.example.filmcatalog.films.model.Films> getFilmsObserver() {

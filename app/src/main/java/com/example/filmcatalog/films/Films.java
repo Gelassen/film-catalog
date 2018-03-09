@@ -25,11 +25,17 @@ public interface Films {
         void showError();
 
         void hidesError();
+
+        void onRestoreState(int position);
     }
 
     interface Presenter extends Main.Presenter {
         void onSearchMovie(String apiKey, String movie, boolean isFirstPage);
 
         void onPullToRefresh(String apiKey);
+
+        void onConfigurationChange();
+
+        void saveListState(int position);
     }
 }
