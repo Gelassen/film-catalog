@@ -91,7 +91,9 @@ public class FilmsAdapter extends Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return isShowFooter ? dataSource.size() + FOOTER : dataSource.size();
+        isShowFooter = isShowFooter && !(dataSource.size() == 0);
+        final int count = isShowFooter ? dataSource.size() + FOOTER : dataSource.size();
+        return count;
     }
 
     @Override
@@ -101,10 +103,6 @@ public class FilmsAdapter extends Adapter<RecyclerView.ViewHolder> {
 
     public void onDestroy() {
         favorites.save(context);
-    }
-
-    public boolean isFooter(int position) {
-        return isShowFooter && position == getFooterPosition();
     }
 
     private void bindFooterViewHolder(final FooterViewHolder holder) {
