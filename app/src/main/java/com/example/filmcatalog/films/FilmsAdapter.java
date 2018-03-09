@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,10 +40,6 @@ public class FilmsAdapter extends Adapter<RecyclerView.ViewHolder> {
     private boolean isShowFooter;
     private List<Result> dataSource = new ArrayList<>();
     private Favorites favorites;
-
-    public void update(List<Result> results) {
-        update(results, true);
-    }
 
     public void update(List<Result> results, boolean showFooter) {
         isUpdateInProgress = false;
@@ -116,6 +113,10 @@ public class FilmsAdapter extends Adapter<RecyclerView.ViewHolder> {
         });
         holder.next.setVisibility(isUpdateInProgress ? View.GONE : View.VISIBLE);
         holder.progress.setVisibility(isUpdateInProgress ? View.VISIBLE : View.GONE);
+
+        StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
+        params.setFullSpan(true);
+        holder.itemView.setLayoutParams(params);
     }
 
     private void bindFilmsViewHolder(final FilmsViewHolder holder, final Result item) {

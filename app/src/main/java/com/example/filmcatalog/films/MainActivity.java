@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Log;
@@ -32,7 +33,7 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
 
     private final int spanCount = SINGLE_IN_ROW;
 
-    private GridLayoutManager gridLayoutManager;
+    private StaggeredGridLayoutManager gridLayoutManager;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rv;
     private FilmsAdapter adapter;
@@ -59,14 +60,8 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         ImageView update = findViewById(R.id.update);
         update.setOnClickListener(getSearchMovieListener(filter));
 
-        gridLayoutManager = new GridLayoutManager(getApplicationContext(), spanCount);
+        gridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         gridLayoutManager.setSpanCount(getSpanCount(null));
-//        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-//            @Override
-//            public int getSpanSize(int position) {
-//                return adapter.isFooter(position) ? 1 : getSpanCount(null);
-//            }
-//        });
 
         adapter = new FilmsAdapter(this, this);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
@@ -94,8 +89,8 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                final int position = gridLayoutManager.findFirstVisibleItemPosition();
-                presenter.saveListState(position);
+                final int[] position = gridLayoutManager.findFirstCompletelyVisibleItemPositions(null);
+                presenter.saveListState(position[0]);
             }
         });
     }
@@ -251,6 +246,7 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         } else {
             spanCount = (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) ? DOUBLE_IN_ROW : SINGLE_IN_ROW;
         }
+        Log.d(App.TAG, "Span count: " + spanCount);
         return spanCount;
     }
 
