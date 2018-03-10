@@ -2,5 +2,9 @@ It would be good to have tests here. Especially for part responsible list for co
 
 Need time for learn how to properly manage subscriptions in RxJava 2. 
 
-Add error state for images 
+Add error state for images.
+
+Progress bar. I used classic as it what we usually do. I might have to ask clarify requirements if it is not right. 
+
+Layouts. There are several approaches how to design layouts which is varies from team to team. I chose to tune dp's for range of screens, but your strategy might be build it based on flexibility of view weights, constrain or percent layouts. Again something I have to clarify
 
