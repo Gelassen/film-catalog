@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="183dp"
-    android:layout_marginRight="8dp"
-    android:layout_marginLeft="8dp"
+    android:layout_height="@dimen/card_width"
+    android:layout_marginRight="@dimen/card_margin"
+    android:layout_marginLeft="@dimen/card_margin"
     android:background="@drawable/ic_card_background"
     xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="96dp"
+        android:layout_width="@dimen/image_width_land"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:background="@drawable/ic_launcher_background"
@@ -19,17 +19,17 @@
         android:layout_toRightOf="@+id/icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="12dp"
+        android:layout_margin="@dimen/item_width_land"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:textSize="22sp"
+            android:layout_marginBottom="@dimen/title_margin_bottom_land"
             android:maxLines="2"
-            android:lineSpacingExtra="6dp"
+            android:textSize="@dimen/font_title_land"
+            android:lineSpacingExtra="@dimen/spacing_title_land"
             android:textStyle="bold"
             android:textColor="#dd000000"
             android:fontFamily="sans-serif-medium"
@@ -43,7 +43,9 @@
             android:layout_below="@+id/title"
             android:layout_above="@+id/footer"
             android:ellipsize="end"
-            android:textSize="14sp"
+            android:lineSpacingExtra="@dimen/spacing_desc"
+            android:layout_marginBottom="@dimen/desc_margin_bottom_land"
+            android:textSize="@dimen/font_desc_land"
             android:textColor="#8a000000"
             android:fontFamily="sans-serif"
             tools:text="Отставной детектив Рик Декард вновь восстановлен в полиции Лос-Анджелеса для поиска возглавляемой Роем Батти группы киборгов, совершившей побег из космической колонии на Землю."
@@ -52,8 +54,7 @@
         <RelativeLayout
             android:id="@+id/footer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="19dp"
+            android:layout_height="@dimen/date_height"
             android:layout_alignParentBottom="true">
 
             <TextView
@@ -62,13 +63,14 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:textColor="#8a000000"
-                android:textSize="14sp"
                 android:singleLine="true"
-                android:paddingRight="8dp"
-                android:drawablePadding="4dp"
+                android:textSize="@dimen/font_date_land"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
-                android:drawableLeft="@drawable/ic_date_range_white_24dp"
                 android:layout_toLeftOf="@+id/fav"
+                android:paddingLeft="-4dp"
+                android:drawablePadding="4dp"
+                android:drawableLeft="@drawable/ic_calendar"
                 tools:text="5th of March" />
 
             <ImageView
@@ -76,10 +78,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:background="@drawable/ic_fav_level_list" />
 
         </RelativeLayout>
+
+
 
     </RelativeLayout>
 

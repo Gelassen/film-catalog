@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="card_width">183dp</dimen>
+    <dimen name="card_margin">8dp</dimen>
+    <dimen name="image_width">192dp</dimen>
+    <dimen name="item_width">12dp</dimen>
+    <dimen name="title_margin_bottom">8dp</dimen>
+    <dimen name="desc_margin_bottom">19dp</dimen>
+    <dimen name="font_title">22sp</dimen>
+    <dimen name="font_desc">14sp</dimen>
+    <dimen name="font_date">14sp</dimen>
+    <dimen name="spacing_title">4dp</dimen>
+    <dimen name="spacing_desc">2dp</dimen>
+    <dimen name="date_height">24dp</dimen>
+
+    <dimen name="title_margin_bottom_land">8dp</dimen>
+    <dimen name="desc_margin_bottom_land">19dp</dimen>
+    <dimen name="card_width_land">183dp</dimen>
+    <dimen name="card_margin_land">8dp</dimen>
+    <dimen name="image_width_land">128dp</dimen>
+    <dimen name="item_width_land">12dp</dimen>
+    <dimen name="font_title_land">22sp</dimen>
+    <dimen name="font_desc_land">14sp</dimen>
+    <dimen name="font_date_land">14sp</dimen>
+    <dimen name="spacing_title_land">4dp</dimen>
+    <dimen name="spacing_desc_land">2dp</dimen>
+</resources>

@@ -206,7 +206,7 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         return new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View view) {
-                // TODO I need more time to sync about logic of 1s delay. RX api might have out-of-box solution
+                // TODO I need more time to think about logic of 1s delay. RX api might have out-of-box solution
                 presenter.onSearchMovie(
                         getString(R.string.api_key),
                         filter.getText().toString(),
