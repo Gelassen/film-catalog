@@ -1,0 +1,4 @@
+It would be good to have tests here. Especially for part responsible list for corner cases .
+
+Need time for learn how to properly manage subscriptions in RxJava 2. 
+
