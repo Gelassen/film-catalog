@@ -7,11 +7,13 @@
     android:visibility="gone"
     android:background="@null">
 
-    <ProgressBar
-        android:id="@+id/progress_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        />
-    
+    <!--<ProgressBar-->
+        <!--android:id="@+id/progress_indicator"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--/>-->
+
+    <include layout="@layout/view_failed_request" />
+
 </FrameLayout>

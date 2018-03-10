@@ -48,6 +48,7 @@ public class FilmsAdapter extends Adapter<RecyclerView.ViewHolder> {
     }
 
     public void clear() {
+        isUpdateInProgress = false;
         dataSource.clear();
         notifyDataSetChanged();
     }
@@ -154,6 +155,11 @@ public class FilmsAdapter extends Adapter<RecyclerView.ViewHolder> {
 
         DateTimeFormatter dateTimeFormatSecond = DateTimeFormat.forPattern("dd MMMM yyyy");
         return dateTimeFormatSecond.print(dateTime);
+    }
+
+    public void setProgressState(boolean turnOff) {
+        isUpdateInProgress = turnOff;
+        notifyItemChanged(getFooterPosition());
     }
 
     public class FilmsViewHolder extends RecyclerView.ViewHolder {

@@ -39,7 +39,7 @@ public class FilmsProvider implements FilmsService {
     @Override
     public Observable<Films> getFilmsWithFilter(String apiKey, String language, String page, String query) {
         return service.getApi()
-                .getFilmsWithFilter(apiKey, language, page, query)
+                .getFilmsWithFilter(apiKey, language, query, page)
                 .subscribeOn(subscribeScheduler)
                 .observeOn(observeScheduler);
     }

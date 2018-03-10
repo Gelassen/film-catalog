@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.InputFilter;
@@ -31,8 +30,6 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     private static final int SINGLE_IN_ROW = 1;
     private static final int DOUBLE_IN_ROW = 2;
 
-    private final int spanCount = SINGLE_IN_ROW;
-
     private StaggeredGridLayoutManager gridLayoutManager;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rv;
@@ -43,6 +40,7 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     private android.view.View notFoundView;
     private android.view.View failedRequestView;
     private android.view.View progressView;
+    private android.view.View progressWithContentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +56,7 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         clear.setOnClickListener(getClearListener(filter));
 
         ImageView update = findViewById(R.id.update);
-        update.setOnClickListener(getSearchMovieListener(filter));
+        update.setOnClickListener(getTryAgainListener(filter));
 
         gridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         gridLayoutManager.setSpanCount(getSpanCount(null));
@@ -71,19 +69,14 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         rv.setAdapter(adapter);
         rv.addItemDecoration(new ItemDecoration(8));
 
+        progressWithContentView = findViewById(R.id.progress_indicator);
         progressView = findViewById(R.id.root_progress);
         notFoundView = findViewById(R.id.root_not_found);
         failedRequestView = findViewById(R.id.root_failed_request);
-        failedRequestView.setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View view) {
-                presenter.onPullToRefresh(getString(R.string.api_key));
-            }
-        });
 
         presenter.onAttachView(this);
 
-        presenter.onPullToRefresh(getString(R.string.api_key));
+        presenter.onPullToRefresh(getString(R.string.api_key), adapter.getItemCount() != 0);
 
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -97,7 +90,7 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
 
     @Override
     public void onRefresh() {
-        presenter.onPullToRefresh(getString(R.string.api_key));
+        presenter.onPullToRefresh(getString(R.string.api_key), adapter.getItemCount() != 0);
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -144,7 +137,6 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
 
     @Override
     public void onFilterResult(com.example.filmcatalog.films.model.Films films, boolean lastPage) {
-        adapter.clear();
         adapter.update(films.getResults(), !lastPage);
         swipeRefreshLayout.setRefreshing(false);
         hideKeyboard();
@@ -153,15 +145,30 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     @Override
     public void onNextPage() {
         if (isSearchMode()) {
-            presenter.onSearchMovie(getString(R.string.api_key), getSearchText(), false);
+            presenter.onSearchMovie(getString(R.string.api_key),
+                    getSearchText(),
+                    false,
+                    false,
+                    adapter.getItemCount() != 0);
         } else {
-            presenter.onPullToRefresh(getString(R.string.api_key));
+            presenter.onPullToRefresh(getString(R.string.api_key), adapter.getItemCount() != 0);
         }
     }
 
     @Override
     public void onFilmsItemClick(String name) {
         Snackbar.make(findViewById(R.id.coordinatorLayout), name, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showPullToRefreshProgress() {
+        progressWithContentView.setVisibility(android.view.View.VISIBLE);
+    }
+
+    @Override
+    public void hidePullToRefreshProgress() {
+        progressWithContentView.setVisibility(android.view.View.GONE);
+        adapter.setProgressState(false);
     }
 
     @Override
@@ -172,6 +179,7 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     @Override
     public void hideProgressPlaceholder() {
         progressView.setVisibility(android.view.View.GONE);
+        adapter.setProgressState(false);
     }
 
     @Override
@@ -186,8 +194,17 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
     }
 
     @Override
-    public void showError() {
+    public void showOnFailedRequest() {
         failedRequestView.setVisibility(android.view.View.VISIBLE);
+    }
+
+    @Override
+    public void hideFailedRequest() {
+        failedRequestView.setVisibility(android.view.View.GONE);
+    }
+
+    @Override
+    public void showError() {
         Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.network_error), Snackbar.LENGTH_SHORT).show();
     }
 
@@ -201,17 +218,30 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         rv.scrollToPosition(position);
     }
 
+    @Override
+    public void showList() {
+        swipeRefreshLayout.setVisibility(android.view.View.VISIBLE);
+        rv.setVisibility(android.view.View.VISIBLE);
+    }
+
+    @Override
+    public void hideList() {
+        swipeRefreshLayout.setVisibility(android.view.View.GONE);
+        rv.setVisibility(android.view.View.GONE);
+    }
+
+    @Override
+    public void onClearList() {
+        adapter.clear();
+    }
+
     @NonNull
-    private android.view.View.OnClickListener getSearchMovieListener(final EditText filter) {
+    private android.view.View.OnClickListener getTryAgainListener(final EditText filter) {
         return new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View view) {
-                // TODO I need more time to think about logic of 1s delay. RX api might have out-of-box solution
-                presenter.onSearchMovie(
-                        getString(R.string.api_key),
-                        filter.getText().toString(),
-                        false
-                );
+                presenter.onTryAgain(getString(R.string.api_key), filter.getText().toString(), adapter.getItemCount() != 0);
+
             }
         };
     }
@@ -221,8 +251,13 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
         return new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View view) {
+                presenter.onFilterClear();
+                // remove filter listener to prevent fire API call during clean
+                filter.setFilters(new InputFilter[] {});
                 filter.getText().clear();
+                filter.setFilters(getFilters());
                 clear.setVisibility(android.view.View.GONE);
+                adapter.clear();
             }
         };
     }
@@ -263,7 +298,11 @@ public class MainActivity extends BaseActivity<FilmsPresenter> implements View, 
                 String words = filter.getText().toString();
                 boolean isSomethingInInput = words.length() != 0;
                 clear.setVisibility(isSomethingInInput ? android.view.View.VISIBLE : android.view.View.GONE);
-                presenter.onSearchMovie(MainActivity.this.getString(R.string.api_key), words, true);
+                presenter.onSearchMovie(MainActivity.this.getString(R.string.api_key),
+                        words,
+                        true,
+                        true,
+                        adapter.getItemCount() != 0);
                 return charSequence;
             }
         }};

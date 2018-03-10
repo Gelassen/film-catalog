@@ -1,9 +1,6 @@
 package com.example.filmcatalog.films;
 
 
-import android.util.Log;
-
-import com.example.filmcatalog.App;
 import com.example.filmcatalog.BasePresenter;
 import com.example.filmcatalog.Main;
 import com.example.filmcatalog.SimpleObserver;
@@ -48,41 +45,53 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
     }
 
     @Override
-    public void onSearchMovie(String apiKey, String movie, boolean isFirstPage) {
+    public void onSearchMovie(String apiKey, String movie, boolean isFirstPage, boolean clearPreviousList, boolean hasData) {
         // TODO properly track subscriptions and unsubscriptions
-        if (isFirstPage) searchPage = 0;
-        onSearchMovieNextPage(apiKey, movie, searchPage);
+        if (isFirstPage) searchPage = 1;
+        onSearchMovieNextPage(apiKey, movie, searchPage, clearPreviousList, hasData);
     }
 
-    private void onSearchMovieNextPage(String apiKey, String movie, int page) {
+    private void onSearchMovieNextPage(String apiKey, String movie, int page, boolean clearPreviousList, final boolean hasData) {
         filmsProvider
                 .getFilmsWithFilter(apiKey, defaultLang, String.valueOf(page), movie)
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
-                        view.showProgressPlaceholder();
                         searchPage++;
-//                        com.example.filmcatalog.films.model.Films films = new com.example.filmcatalog.films.model.Films();
-//                        films.setResults(new ArrayList<Result>());
-//                        view.onResult(films);
+                        if (hasData) {
+                            view.showPullToRefreshProgress();
+                        } else {
+                            view.showProgressPlaceholder();
+                        }
                     }
                 })
-                .subscribe(getFilterFilmsObserver(movie));
+                .doOnError(new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        searchPage--;
+                    }
+                })
+                .subscribe(getFilterFilmsObserver(movie, clearPreviousList, hasData));
     }
 
     @Override
-    public void onPullToRefresh(String apiKey) {
+    public void onPullToRefresh(String apiKey, boolean hasData) {
         // TODO properly track subscriptions and unsubscriptions
         filmsProvider
                 .getFilms(apiKey, defaultLang, String.valueOf(page))
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
-                        view.showProgressPlaceholder();
                         page++;
                     }
                 })
-                .subscribe(getFilmsObserver());
+                .doOnError(new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        page--;
+                    }
+                })
+                .subscribe(getFilmsObserver(hasData));
     }
 
     @Override
@@ -95,26 +104,55 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
         this.position = position;
     }
 
-    private Observer<com.example.filmcatalog.films.model.Films> getFilmsObserver() {
+    @Override
+    public void onFilterClear() {
+        page = 1;
+        searchPage = 1;
+    }
+
+    @Override
+    public void onTryAgain(String apiKey, String searchFilter, boolean hasData) {
+        boolean isTryAgainSearch = searchFilter.length() == 0;
+        if (isTryAgainSearch) {
+            view.hideFailedRequest();
+            view.showProgressPlaceholder();
+            onPullToRefresh(apiKey, hasData);
+        } else {
+            // TODO I need more time to think about logic of 1s delay. RX api might have out-of-box solution
+            view.hideFailedRequest();
+            view.showProgressPlaceholder();
+            onSearchMovie(apiKey, searchFilter,true, true, hasData);
+        }
+    }
+
+    private Observer<com.example.filmcatalog.films.model.Films> getFilmsObserver(final boolean hasData) {
         return new SimpleObserver<com.example.filmcatalog.films.model.Films>() {
             @Override
             public void onNext(com.example.filmcatalog.films.model.Films films) {
                 super.onNext(films);
                 view.onResult(films, films.getResults().size() < AMOUNT_IN_REQUEST);
+                view.showList();
                 resetState();
             }
 
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                Log.e(App.TAG, "Failed to obtain list of data", e);
-                view.hideProgressPlaceholder();
-                view.showError();
+                if (hasData) {
+                    view.showError();
+                    view.hidePullToRefreshProgress();
+                } else {
+                    view.hideProgressPlaceholder();
+                    view.showOnFailedRequest();
+                    view.hideList();
+                }
             }
         };
     }
 
-    private Observer<com.example.filmcatalog.films.model.Films> getFilterFilmsObserver(final String query) {
+    private Observer<com.example.filmcatalog.films.model.Films> getFilterFilmsObserver(final String query,
+                                                                                       final boolean clearPreviousList,
+                                                                                       final boolean hasData) {
         return new SimpleObserver<com.example.filmcatalog.films.model.Films>() {
             @Override
             public void onNext(com.example.filmcatalog.films.model.Films films) {
@@ -124,17 +162,26 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
                     view.onFilterResult(films, true);
                     view.showFilmsNotFound(query);
                 } else {
+                    if (clearPreviousList) {
+                        view.onClearList();
+                    }
                     view.onFilterResult(films, films.getResults().size() < AMOUNT_IN_REQUEST);
                 }
-                view.hideProgressPlaceholder();
+                view.showList();
+                resetState();
             }
 
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                Log.e(App.TAG, "Failed to obtain list of data", e);
-                view.hideProgressPlaceholder();
-                view.showError();
+                if (hasData) {
+                    view.showError();
+                    view.hidePullToRefreshProgress();
+                } else {
+                    view.hideProgressPlaceholder();
+                    view.showOnFailedRequest();
+                    view.hideList();
+                }
             }
         };
     }
@@ -142,6 +189,8 @@ public class FilmsPresenter extends BasePresenter implements Films.Presenter {
     private void resetState() {
         view.hidesError();
         view.hidesFilmsNotFound();
+        view.hideFailedRequest();
         view.hideProgressPlaceholder();
+        view.hidePullToRefreshProgress();
     }
 }
