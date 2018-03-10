@@ -2,3 +2,5 @@ It would be good to have tests here. Especially for part responsible list for co
 
 Need time for learn how to properly manage subscriptions in RxJava 2. 
 
+Add error state for images 
+
