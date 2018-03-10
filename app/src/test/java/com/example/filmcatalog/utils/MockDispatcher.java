@@ -9,8 +9,8 @@ import okhttp3.mockwebserver.RecordedRequest;
 
 public class MockDispatcher extends Dispatcher {
 
-    private static final String MOVIES = "GET /discover/movie?api-key=";
-    private static final String MOVIES_FILTER = "GET /search/movie?api-key=";
+    private static final String MOVIES = "GET /3/discover/movie?api_key=";
+    private static final String MOVIES_FILTER = "GET /3/search/movie?api_key=";
 
     @Override
     public MockResponse dispatch(RecordedRequest request) throws InterruptedException {

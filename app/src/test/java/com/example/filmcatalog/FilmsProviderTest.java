@@ -33,7 +33,7 @@ public class FilmsProviderTest extends BaseTest {
     public void getFilms_networkIsOn_returnFilms() throws Exception {
         TestObserver testObserver = new TestObserver();
 
-        Observable<Films> films = provider.getFilms(apiKey);
+        Observable<Films> films = provider.getFilms(apiKey, "ru-RU", String.valueOf(1));
         films.subscribe(testObserver);
 
         testObserver.assertNoErrors();
@@ -49,7 +49,7 @@ public class FilmsProviderTest extends BaseTest {
     public void getFilmsBySearch_networkIsOn_returnFilms() throws Exception {
         TestObserver testObserver = new TestObserver();
 
-        Observable<Films> films = provider.getFilmsWithFilter(apiKey, "The Blade Runner");
+        Observable<Films> films = provider.getFilmsWithFilter(apiKey, "ru-RU", String.valueOf(1), "The Blade Runner");
         films.subscribe(testObserver);
 
         testObserver.assertNoErrors();
