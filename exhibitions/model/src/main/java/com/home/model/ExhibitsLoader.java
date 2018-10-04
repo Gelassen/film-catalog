@@ -3,6 +3,8 @@ package com.home.model;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+
 public interface ExhibitsLoader {
-    List<Exhibit> getExhibitList();
+    Observable<List<Exhibit>> getExhibitList();
 }
