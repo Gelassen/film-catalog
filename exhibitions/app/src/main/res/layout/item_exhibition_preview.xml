@@ -3,8 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,22 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:background="@drawable/ic_launcher_background"
         />
 
     <TextView
         android:id="@+id/preview_title"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#88000000"
-        android:gravity="center"
         android:ellipsize="end"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:textAllCaps="true"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
+        android:textColor="@color/white"
         android:textSize="8sp"
-        tools:text="Hello world"
-        app:layout_constraintHeight_percent=".2"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent=".35"
+        tools:text="Hello world" />
 
 </android.support.constraint.ConstraintLayout>

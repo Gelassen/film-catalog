@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface IView {
     void onModel(List<Exhibit> data);
+
+    void onError();
 }
