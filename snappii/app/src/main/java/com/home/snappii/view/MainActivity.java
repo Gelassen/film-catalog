@@ -85,12 +85,10 @@ public class MainActivity extends AppCompatActivity implements ViewContract.IVie
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             final Result result = data.get(position);
-            holder.name.setText(result.getName().getFirst());
-            holder.surname.setText(result.getName().getLast());
+            holder.name.setText(result.getName().getFirst() + " " + result.getName().getLast());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // TODO complete me
                     DetailedActivity.start(holder.itemView.getContext(), result);
                 }
             });
@@ -109,13 +107,11 @@ public class MainActivity extends AppCompatActivity implements ViewContract.IVie
 
             private final ImageView avatar;
             private final TextView name;
-            private final TextView surname;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 avatar = itemView.findViewById(R.id.avatar);
-                name = itemView.findViewById(R.id.name);
-                surname = itemView.findViewById(R.id.surname);
+                name = itemView.findViewById(R.id.title);
             }
         }
     }
