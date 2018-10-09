@@ -1,15 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:background="@color/colorItemBkg"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_launcher_background"/>
+
     <TextView
-        android:id="@+id/value"
+        android:id="@+id/nameTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:layout_toRightOf="@id/avatar"
+        android:minEms="5"
+        android:text="Name:"/>
+
+    <TextView
+        android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
+        android:paddingTop="16dp"
+        android:layout_toRightOf="@id/nameTitle"
         tools:text="Hello world!"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/surnameTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:minEms="5"
+        android:layout_toRightOf="@id/avatar"
+        android:layout_below="@+id/nameTitle"
+        android:text="Surname: "/>
+
+    <TextView
+        android:id="@+id/surname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:layout_toRightOf="@id/surnameTitle"
+        android:layout_below="@+id/name"
+        tools:text="Hello world!"/>
+
+</RelativeLayout>
