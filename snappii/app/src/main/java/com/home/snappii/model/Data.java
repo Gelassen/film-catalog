@@ -1,11 +1,12 @@
 
 package com.home.snappii.model;
 
+import java.io.Serializable;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Data {
+public class Data implements Serializable {
 
     @SerializedName("results")
     @Expose

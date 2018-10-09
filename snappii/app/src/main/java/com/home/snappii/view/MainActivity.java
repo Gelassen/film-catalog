@@ -83,14 +83,15 @@ public class MainActivity extends AppCompatActivity implements ViewContract.IVie
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            Result result = data.get(position);
+        public void onBindViewHolder(final ViewHolder holder, int position) {
+            final Result result = data.get(position);
             holder.name.setText(result.getName().getFirst());
             holder.surname.setText(result.getName().getLast());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     // TODO complete me
+                    DetailedActivity.start(holder.itemView.getContext(), result);
                 }
             });
 

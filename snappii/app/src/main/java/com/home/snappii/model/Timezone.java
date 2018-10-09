@@ -4,7 +4,9 @@ package com.home.snappii.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Timezone {
+import java.io.Serializable;
+
+public class Timezone implements Serializable {
 
     @SerializedName("offset")
     @Expose

@@ -4,7 +4,9 @@ package com.home.snappii.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Coordinates {
+import java.io.Serializable;
+
+public class Coordinates implements Serializable {
 
     @SerializedName("latitude")
     @Expose
