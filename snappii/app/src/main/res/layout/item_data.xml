@@ -4,6 +4,8 @@
     android:layout_height="wrap_content"
     android:paddingLeft="4dp"
     android:paddingRight="4dp"
+    android:clickable="true"
+    android:foreground="?android:selectableItemBackground"
     android:background="@color/colorItemBkg"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -18,6 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:paddingTop="24dp"
         android:layout_toRightOf="@id/avatar"
         android:textSize="18sp"

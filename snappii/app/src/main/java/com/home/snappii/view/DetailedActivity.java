@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -69,6 +70,15 @@ public class DetailedActivity extends AppCompatActivity {
         nationalityView.setText(result.getNat());
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return false;
+    }
     private void bindAddress(TextView location, Location data) {
         location.setText(data.getStreet() + ", " + data.getCity() + ", " + data.getState());
     }

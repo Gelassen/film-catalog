@@ -8,17 +8,20 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.home.snappii.AppApplication;
 import com.home.snappii.R;
 import com.home.snappii.model.Result;
 import com.home.snappii.utils.ItemDecoration;
+import com.home.snappii.utils.PaginationScrollListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +46,26 @@ public class MainActivity extends AppCompatActivity implements ViewContract.IVie
         swipeRefreshLayout.setOnRefreshListener(this);
 
         RecyclerView list = findViewById(R.id.list);
-        list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        list.setLayoutManager(layoutManager);
         list.setAdapter(adapter);
         list.addItemDecoration(new ItemDecoration(4));
+        list.addOnScrollListener(new PaginationScrollListener(layoutManager) {
+            @Override
+            protected void loadMoreItems() {
+                presenter.requestNextPage();
+            }
 
+            @Override
+            public boolean isLastPage() {
+                return false;
+            }
+
+            @Override
+            public boolean isLoading() {
+                return swipeRefreshLayout.isRefreshing();
+            }
+        });
         presenter.requestData();
     }
 
@@ -58,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements ViewContract.IVie
 
     @Override
     public void onError() {
+        Toast.makeText(this, "Something goes wrong", Toast.LENGTH_SHORT).show();
         swipeRefreshLayout.setRefreshing(false);
     }
 
