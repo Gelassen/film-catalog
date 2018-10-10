@@ -10,6 +10,7 @@
     tools:showIn="@layout/activity_scrolling">
 
     <LinearLayout
+        android:id="@+id/phoneContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -64,6 +65,7 @@
         <include layout="@layout/item_divider" />
 
         <RelativeLayout
+            android:id="@+id/emailContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"

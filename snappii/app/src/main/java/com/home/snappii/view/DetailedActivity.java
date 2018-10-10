@@ -3,6 +3,7 @@ package com.home.snappii.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -36,9 +37,7 @@ public class DetailedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scrolling);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        Result result = (Result) getIntent().getExtras().get(KEY);
-
-        Log.d("TAG", "we got data");
+        final Result result = (Result) getIntent().getExtras().get(KEY);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +59,24 @@ public class DetailedActivity extends AppCompatActivity {
         TextView phoneView = findViewById(R.id.phone);
         phoneView.setText(result.getCell());
 
+        findViewById(R.id.phone)
+                .setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + result.getCell()));
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.emailContainer)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        composeEmail(new String[] { result.getEmail() }, "Hello from Snappii");
+                    }
+                });
+
         TextView emailView = findViewById(R.id.email);
         emailView.setText(result.getEmail());
 
@@ -79,8 +96,19 @@ public class DetailedActivity extends AppCompatActivity {
         }
         return false;
     }
+
     private void bindAddress(TextView location, Location data) {
         location.setText(data.getStreet() + ", " + data.getCity() + ", " + data.getState());
+    }
+
+    private void composeEmail(String[] addresses, String subject) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
 }
