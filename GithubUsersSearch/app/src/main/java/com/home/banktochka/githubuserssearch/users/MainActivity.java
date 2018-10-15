@@ -3,6 +3,7 @@ package com.home.banktochka.githubuserssearch.users;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,11 +13,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.home.banktochka.githubuserssearch.IApplication;
 import com.home.banktochka.githubuserssearch.R;
+import com.home.banktochka.githubuserssearch.users.model.Item;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ViewContract.IView {
+
+    private Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +50,10 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        presenter = new Presenter((IApplication) getApplication());
+        presenter.onViewAttach(this);
+        presenter.onRequestNewData("");
     }
 
     @Override
@@ -99,5 +111,15 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onShowError() {
+        Toast.makeText(this, "Show error", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onData(List<Item> data) {
+        Log.d("TAG", "onData");
     }
 }
