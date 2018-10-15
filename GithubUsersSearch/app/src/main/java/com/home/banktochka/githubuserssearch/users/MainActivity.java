@@ -3,6 +3,8 @@ package com.home.banktochka.githubuserssearch.users;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -15,8 +17,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.home.banktochka.githubuserssearch.App;
 import com.home.banktochka.githubuserssearch.IApplication;
 import com.home.banktochka.githubuserssearch.R;
+import com.home.banktochka.githubuserssearch.stub.StubFragment;
 import com.home.banktochka.githubuserssearch.users.model.Item;
 
 import java.util.List;
@@ -92,21 +96,39 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        Fragment fragment = null;
+        Class fragmentClass;
         int id = item.getItemId();
-
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            fragmentClass = UsersFragment.class;
         } else if (id == R.id.nav_gallery) {
-
+            fragmentClass = StubFragment.class;
         } else if (id == R.id.nav_slideshow) {
-
+            fragmentClass = StubFragment.class;
         } else if (id == R.id.nav_manage) {
-
+            fragmentClass = StubFragment.class;
         } else if (id == R.id.nav_share) {
-
+            fragmentClass = StubFragment.class;
         } else if (id == R.id.nav_send) {
-
+            fragmentClass = StubFragment.class;
+        } else {
+            throw new RuntimeException("Did you forget to support an extra navigation case?");
         }
+
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            Log.e(App.TAG, "Failed to create a fragment instance", e);
+        }
+
+        // TODO reuse existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
+
+        item.setChecked(true);
+        setTitle(item.getTitle());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
